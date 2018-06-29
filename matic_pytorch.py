@@ -94,7 +94,11 @@ class GP_adapter(torch.nn.Module):
         z = self.sample_from_posterior(mu, R)
         # z = z.repeat(1, 2)[:, :self.n_pivots+3-1]  ## Repeat first two points at the end, cyclic conv, TODO: Find smarter way to do it
         z = torch.unsqueeze(z, dim=1)
-        # Convolutional layers
+        # Fully convolutional architecture
+        # https://arxiv.org/pdf/1611.06455.pdf
+        # https://arxiv.org/pdf/1709.05206.pdf
+        # https://arxiv.org/pdf/1312.4400.pdf
+        # 
         x = F.relu(self.conv1(z))        
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
