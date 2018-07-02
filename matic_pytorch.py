@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class GP_adapter(torch.nn.Module):
 
-    def __init__(self, n_pivots=50, n_mc_samples=32, n_neuron_conv=8, n_classes=2):
+    def __init__(self, n_pivots=50, n_mc_samples=32, n_neuron_conv=8, kernel_size=5, n_classes=2):
         
         """
         n_pivots: Number of regularly sampled points of the GP regression
@@ -24,10 +24,13 @@ class GP_adapter(torch.nn.Module):
         self.gp_logtau_kernel = torch.nn.Parameter(0.1*torch.randn(1, dtype=self.dtype))
         self.gp_logvar_likelihood = torch.nn.Parameter(0.1*torch.randn(1, dtype=self.dtype))
         # Layers
-        self.conv1 = torch.nn.Conv1d(in_channels=1, out_channels=n_neuron_conv, kernel_size=3, stride=1, bias=True) 
-        self.conv2 = torch.nn.Conv1d(in_channels=n_neuron_conv, out_channels=n_neuron_conv, kernel_size=3, stride=1, bias=True) 
-        self.conv3 = torch.nn.Conv1d(in_channels=n_neuron_conv, out_channels=n_neuron_conv, kernel_size=3, stride=1, bias=True) 
-        self.gpool = torch.nn.AvgPool1d(kernel_size=n_pivots-6, stride=1, padding=0)
+        self.conv1 = torch.nn.Conv1d(in_channels=1, out_channels=n_neuron_conv, kernel_size=kernel_size, 
+                                     stride=1, bias=True) 
+        self.conv2 = torch.nn.Conv1d(in_channels=n_neuron_conv, out_channels=n_neuron_conv, kernel_size=kernel_size, 
+                                     stride=1, bias=True) 
+        self.conv3 = torch.nn.Conv1d(in_channels=n_neuron_conv, out_channels=n_neuron_conv, kernel_size=kernel_size, 
+                                     stride=1, bias=True) 
+        self.gpool = torch.nn.AvgPool1d(kernel_size=n_pivots-3*(kernel_size-1), stride=1, padding=0)
         self.fc1 = torch.nn.Linear(in_features=n_neuron_conv, out_features=n_classes, bias=True)
     
     def stationary_kernel(self, x1, x2, non_trainable_params=None):
@@ -92,20 +95,17 @@ class GP_adapter(torch.nn.Module):
         mu, R, reg_points = self.GP_fit_posterior(mjd, mag, err, P)        
         # Sampling layer
         z = self.sample_from_posterior(mu, R)
-        # z = z.repeat(1, 2)[:, :self.n_pivots+3-1]  ## Repeat first two points at the end, cyclic conv, TODO: Find smarter way to do it
-        z = torch.unsqueeze(z, dim=1)
+        ## Repeat first two points at the end, cyclic conv, TODO: Find smarter way to do this
+        # z = z.repeat(1, 2)[:, :self.n_pivots+3-1]  
         # Fully convolutional architecture
-        # https://arxiv.org/pdf/1611.06455.pdf
-        # https://arxiv.org/pdf/1709.05206.pdf
-        # https://arxiv.org/pdf/1312.4400.pdf
-        # 
+        z = torch.unsqueeze(z, dim=1)
         x = F.relu(self.conv1(z))        
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
+        # Global average pool
         x = self.gpool(x)
         x = x.view(self.n_mc_samples, -1)
         # Fully connected layers
-        #x = F.relu(self.fc1(x))
         x = F.log_softmax(self.fc1(x), dim=1)
         if not return_gp:
             return x
