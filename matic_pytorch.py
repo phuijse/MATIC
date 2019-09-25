@@ -3,7 +3,6 @@ import torch
 import torch.nn.functional as F
 
 class GP_adapter(torch.nn.Module):
-
     def __init__(self, n_pivots=50, n_mc_samples=32, n_neuron_conv=8, kernel_size=5, n_classes=2):
         
         """
