@@ -106,3 +106,5 @@ venv.bak/
 .mypy_cache/
 /PLV_LINEAR.dat
 /allDAT
+/model.pt
+/scores.json

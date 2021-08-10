@@ -1,0 +1,15 @@
+stages:
+  train:
+    cmd: python train_classifier.py
+    deps:
+    - PLV_LINEAR.dat
+    - allDAT
+    - train_classifier.py
+    params:
+    - dataset_seed
+    - lr
+    - n_grid
+    - nepochs
+    outs:
+    - model.pt
+    - scores.json

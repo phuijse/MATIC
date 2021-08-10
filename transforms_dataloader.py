@@ -42,11 +42,11 @@ class PeriodFold:
         sample['light_curve'] = light_curve
         return sample
 
-class Interpolator:
-    def __init__(self, min=0., max=1., n_grid=30):
-        self.hatx = torch.Tensor=torch.linspace(min, max, n_grid)
 
-class LinearInterpolation(Interpolator):
+class LinearInterpolation:
+
+    def __init__(self, min=0., max=1., n_grid=30):
+        self.hatx = torch.linspace(min, max, n_grid)
     
     def __call__(self, sample: Dict) -> Dict:
         x, y, _ = sample['light_curve']
@@ -55,9 +55,12 @@ class LinearInterpolation(Interpolator):
         sample['light_curve'] = yhat.unsqueeze(0)
         return sample
 
-class KernelInterpolation(Interpolator):
+class KernelInterpolation:
     """TODO: More kernels
     """
+
+    def __init__(self, min=0., max=1., n_grid=30):
+        self.hatx = torch.linspace(min, max, n_grid)
     
     def __call__(self, sample: Dict) -> Dict:
         x, y, dy = sample['light_curve']
