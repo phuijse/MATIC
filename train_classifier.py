@@ -3,16 +3,18 @@ import torch
 from torch.utils.data import DataLoader, random_split
 
 from datasets import LINEAR
-import transforms
+from transforms_datasets import Compose, Normalize, ToTensor
+from transforms_dataloader import Collate_and_transform, PeriodFold, KernelInterpolation
 from models import SimpleConv
 
-data = LINEAR(path='.', classes=[1, 5], transform=transforms.Compose([transforms.PeriodFold(), transforms.Normalize(), transforms.Interpolate(), transforms.ToTensor()]))
-train_subset, valid_subset = random_split(data, (4500, len(data)-4500),generator=torch.Generator().manual_seed(1234))
+data = LINEAR(path='.', classes=[1, 5], transform=Compose([Normalize(), ToTensor()]))
+train_subset, valid_subset = random_split(data, (4500, len(data)-4500), generator=torch.Generator().manual_seed(1234))
 model = SimpleConv(n_classes=data.n_classes)
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-train_loader = DataLoader(train_subset, batch_size=32, shuffle=True)
-valid_loader = DataLoader(valid_subset, batch_size=256)
+train_collator = Collate_and_transform([PeriodFold(), KernelInterpolation()])
+train_loader = DataLoader(train_subset, batch_size=32, shuffle=True, collate_fn=train_collator)
+valid_loader = DataLoader(valid_subset, batch_size=256, collate_fn=train_collator)
 
 for n in range(10):
     global_loss = 0.0
