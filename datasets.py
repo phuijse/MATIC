@@ -29,7 +29,7 @@ class LINEAR(Dataset):
         self.data = []
         for id in self.ids:
             file_path = join(data_path, f"{id}.dat")
-            self.data.append(pd.read_csv(file_path, delim_whitespace=True).values)
+            self.data.append(pd.read_csv(file_path, delim_whitespace=True).values.T)
         class_frequency = Counter(self.linear_labels)
         self.n_classes = len(class_frequency)
         self.le = LabelEncoder().fit(list(class_frequency.keys()))
@@ -55,7 +55,7 @@ class LINEAR(Dataset):
     def plot_lightcurve(self, idx: int) -> None:
         fig, ax = plt.subplots(1, 2, figsize=(6, 2), sharey=True, tight_layout=True)
         ax[0].invert_yaxis()
-        mjd, mag, err = self.data[idx].T
+        mjd, mag, err = self.data[idx]
         period = self.periods[idx]
         ax[0].errorbar(mjd, mag, err, fmt='.')
         ax[0].set_xlabel('Julian date')
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     dataset = LINEAR(path='.')
     dataset.plot_lightcurve(0)
     fig, ax = plt.subplots(figsize=(6, 2), sharey=True, tight_layout=True)
-    lc_data = dataset[0]['light_curve']
-    ax.errorbar(lc_data[:, 0], lc_data[:, 1], lc_data[:, 2], fmt='.')
+    mjd, mag, err = dataset[0]['light_curve']
+    ax.errorbar(mjd, mag, err, fmt='.')
 
 
