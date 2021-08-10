@@ -12,4 +12,6 @@ stages:
     - nepochs
     outs:
     - model.pt
-    - scores.json
+    metrics:
+    - scores.json:
+        cache: false
