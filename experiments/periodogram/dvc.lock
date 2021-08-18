@@ -1,0 +1,36 @@
+schema: '2.0'
+stages:
+  train_periodogram:
+    cmd: python ../train_periodogram.py
+    deps:
+    - path: ../PLV_LINEAR.dat
+      md5: 39c510b64cacd788be95bdde49058592
+      size: 700442
+    - path: ../allDAT
+      md5: 768a54fe66973f283e9177c7f8656cb9.dir
+      size: 78651294
+      nfiles: 14388
+    - path: ../train_periodogram.py
+      md5: d2afedadb06170aa373d862d555f4990
+      size: 1938
+    - path: ../transforms_dataloader.py
+      md5: 317c2bc6def7ebecbee368bbff30b23d
+      size: 4742
+    - path: ../transforms_datasets.py
+      md5: de5b66db50112cd77e1b10bfb70fc0c4
+      size: 1302
+    params:
+      params.yaml:
+        dataset_seed: 1234
+        interpolator: kernel
+        lr: 0.001
+        n_grid: 30
+        nepochs: 100
+    outs:
+    - path: model_periodogram.pt
+      md5: 8258793eb4e3109d2906b58d3d7cd5a1
+      size: 21071
+    - path: training_metrics
+      md5: 31fec73d5d2e9f3793e459b383a8a871.dir
+      size: 7684
+      nfiles: 2

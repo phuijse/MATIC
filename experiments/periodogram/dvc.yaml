@@ -1,0 +1,21 @@
+stages:
+  train_periodogram:
+    cmd: python ../train_periodogram.py
+    deps:
+    - ../PLV_LINEAR.dat
+    - ../allDAT
+    - ../train_periodogram.py
+    - ../transforms_dataloader.py
+    - ../transforms_datasets.py
+    params:
+    - dataset_seed
+    - interpolator
+    - lr
+    - n_grid
+    - nepochs
+    outs:
+    - model_periodogram.pt
+    live:
+      training_metrics:
+        summary: true
+        html: true

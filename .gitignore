@@ -102,9 +102,3 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
-.mypy_cache/
-/PLV_LINEAR.dat
-/allDAT
-/model.pt
-/scores.json

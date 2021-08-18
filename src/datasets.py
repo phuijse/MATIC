@@ -52,11 +52,12 @@ class LINEAR(Dataset):
         else:
             return linear_labels
 
-    def plot_lightcurve(self, idx: int) -> None:
+    def plot_lightcurve(self, idx: int, period: Optional[float]=None) -> None:
         fig, ax = plt.subplots(1, 2, figsize=(6, 2), sharey=True, tight_layout=True)
         ax[0].invert_yaxis()
         mjd, mag, err = self.data[idx]
-        period = self.periods[idx]
+        if period is None:
+            period = self.periods[idx]
         ax[0].errorbar(mjd, mag, err, fmt='.')
         ax[0].set_xlabel('Julian date')
         ax[0].set_ylabel('Magnitude')

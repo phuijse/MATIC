@@ -1,0 +1,35 @@
+stages:
+  train_classifier:
+    cmd: python train_classifier.py
+    deps:
+    - PLV_LINEAR.dat
+    - allDAT
+    - train_classifier.py
+    params:
+    - dataset_seed
+    - lr
+    - n_grid
+    - nepochs
+    outs:
+    - model.pt
+    metrics:
+    - scores.json:
+        cache: false
+
+  train_periodogram:
+    cmd: python train_periodogram.py
+    deps:
+    - PLV_LINEAR.dat
+    - allDAT
+    - train_classifier.py
+    params:
+    - dataset_seed
+    - lr
+    - n_grid
+    - nepochs
+    outs:
+    - model_periodogram.pt
+    live:
+      training_metrics:
+        summary: true
+        html: true
