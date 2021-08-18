@@ -1,22 +1,19 @@
 schema: '2.0'
 stages:
   train_periodogram:
-    cmd: python ../train_periodogram.py
+    cmd: python ../../src/train_periodogram.py ../../datasets/LINEAR model.pt
     deps:
-    - path: ../PLV_LINEAR.dat
-      md5: 39c510b64cacd788be95bdde49058592
-      size: 700442
-    - path: ../allDAT
-      md5: 768a54fe66973f283e9177c7f8656cb9.dir
-      size: 78651294
-      nfiles: 14388
-    - path: ../train_periodogram.py
-      md5: d2afedadb06170aa373d862d555f4990
-      size: 1938
-    - path: ../transforms_dataloader.py
-      md5: 317c2bc6def7ebecbee368bbff30b23d
-      size: 4742
-    - path: ../transforms_datasets.py
+    - path: ../../datasets/LINEAR
+      md5: 600a87a83b564e9377b8d5fb61a4518f.dir
+      size: 79351736
+      nfiles: 14389
+    - path: ../../src/train_periodogram.py
+      md5: 860b9991aa4ff89944141ce7cea752b3
+      size: 2100
+    - path: ../../src/transforms_dataloader.py
+      md5: 0a1f51d9707ee8b49c2c00d7e6cad0b9
+      size: 4764
+    - path: ../../src/transforms_datasets.py
       md5: de5b66db50112cd77e1b10bfb70fc0c4
       size: 1302
     params:
@@ -27,10 +24,10 @@ stages:
         n_grid: 30
         nepochs: 100
     outs:
-    - path: model_periodogram.pt
-      md5: 8258793eb4e3109d2906b58d3d7cd5a1
+    - path: model.pt
+      md5: 073dbbd174e19e4f95d4a5e1c851a95c
       size: 21071
     - path: training_metrics
-      md5: 31fec73d5d2e9f3793e459b383a8a871.dir
-      size: 7684
+      md5: c0e245c98c3a480b6d15de355e134e07.dir
+      size: 7594
       nfiles: 2
