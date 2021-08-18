@@ -1,6 +1,6 @@
 stages:
   train_periodogram:
-    cmd: python ../../src/train_periodogram.py
+    cmd: python ../../src/train_periodogram.py ../../datasets/LINEAR model.pt
     deps:
     - ../../datasets/LINEAR
     - ../../src/train_periodogram.py
@@ -13,7 +13,7 @@ stages:
     - n_grid
     - nepochs
     outs:
-    - model_periodogram.pt
+    - model.pt
     live:
       training_metrics:
         summary: true

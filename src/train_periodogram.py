@@ -1,8 +1,6 @@
 
+import sys
 import yaml
-import json
-import numpy as np
-from sklearn import metrics
 import torch
 from torch.utils.data import DataLoader, random_split
 
@@ -13,13 +11,22 @@ from models import SimpleConv
 import dvclive
 #dvclive.init()
 
+
+if len(sys.argv) != 3:
+    sys.stderr.write("Arguments error. Usage:\n")
+    sys.stderr.write("\tpython train_periodogram.py data_path model_path\n")
+    sys.exit(1)
+
+data_path = sys.argv[1]
+model_path = sys.argv[2]
+
 params = yaml.safe_load(open("params.yaml"))
 dataset_seed = params["dataset_seed"]
 lr = params["lr"]
 n_grid = params["n_grid"]
 nepochs = params["nepochs"]
 
-data = LINEAR(path='../', classes=[1, 5], transform=Compose([Normalize(), ToTensor()]))
+data = LINEAR(path=data_path, classes=[1, 5], transform=Compose([Normalize(), ToTensor()]))
 train_subset, valid_subset = random_split(data, (4000, len(data)-4000), generator=torch.Generator().manual_seed(dataset_seed))
 collator = Collate_and_transform([RandomPeriodFold(), KernelInterpolation(n_grid=n_grid)])
 
@@ -53,5 +60,5 @@ for n in range(nepochs):
     dvclive.next_step()
         
 
-torch.save(model, "model_periodogram.pt")
+torch.save(model, model_path)
 

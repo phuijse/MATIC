@@ -112,7 +112,7 @@ if __name__ == "__main__":
     #from torch.utils.data import DataLoader
     dataset = LINEAR(path='.', transform=ToTensor())
     collator1 = Collate_and_transform([PeriodFold()])    
-    %matplotlib ipympl
+    #%matplotlib ipympl
     fig, ax = plt.subplots(4, figsize=(6, 6), sharey=True, tight_layout=True)
     mjd, mag, err = dataset[0]['light_curve']
     ax[0].errorbar(mjd, mag, err, fmt='.')
