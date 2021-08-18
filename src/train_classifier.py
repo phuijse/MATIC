@@ -1,3 +1,4 @@
+import sys
 import yaml
 import json
 import numpy as np
@@ -10,13 +11,22 @@ from transforms_datasets import Compose, Normalize, ToTensor
 from transforms_dataloader import Collate_and_transform, PeriodFold, KernelInterpolation
 from models import SimpleConv
 
+if len(sys.argv) != 4:
+    sys.stderr.write("Arguments error. Usage:\n")
+    sys.stderr.write("\tpython train_classifier.py data_path model_path scores_path\n")
+    sys.exit(1)
+
+data_path = sys.argv[1]
+model_path = sys.argv[2]
+scores_path = sys.argv[3]
+
 params = yaml.safe_load(open("params.yaml"))
 dataset_seed = params["dataset_seed"]
 lr = params["lr"]
 n_grid = params["n_grid"]
 nepochs = params["nepochs"]
 
-data = LINEAR(path='.', classes=[1, 5], transform=Compose([Normalize(), ToTensor()]))
+data = LINEAR(path=data_path, classes=[1, 5], transform=Compose([Normalize(), ToTensor()]))
 train_subset, valid_subset = random_split(data, (4000, len(data)-4000), generator=torch.Generator().manual_seed(dataset_seed))
 collator = Collate_and_transform([PeriodFold(), KernelInterpolation(n_grid=n_grid)])
 train_loader = DataLoader(train_subset, batch_size=32, shuffle=True, collate_fn=collator)
@@ -38,7 +48,7 @@ for n in range(nepochs):
         global_loss += loss.item()
     print(f"{n} {global_loss}")
 
-torch.save(model, "model.pt")
+torch.save(model, model_path)
 
 preds = []
 label = []    
@@ -52,7 +62,7 @@ preds = np.concatenate(preds)
 avg_prec = metrics.average_precision_score(label, preds)
 roc_auc = metrics.roc_auc_score(label, preds)
 
-with open("scores.json", "w") as fd:
+with open(scores_path, "w") as fd:
     json.dump({"avg_prec": avg_prec, "roc_auc": roc_auc}, fd, indent=4)
 
 print(metrics.classification_report(label, preds, target_names=data.decode_labels(np.unique(label))))

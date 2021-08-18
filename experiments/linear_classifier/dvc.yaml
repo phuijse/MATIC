@@ -1,10 +1,12 @@
 stages:
-  train_classifier:
-    cmd: python train_classifier.py
+  train:
+    cmd: python ../../src/train_classifier.py ../../datasets/LINEAR model.pt scores.json
     deps:
-    - PLV_LINEAR.dat
-    - allDAT
-    - train_classifier.py
+    - ../../datasets/LINEAR
+    - ../../src/train_classifier.py
+    - ../../src/transforms_datasets.py
+    - ../../src/datasets.py
+    - ../../src/transforms_dataloaders.py
     params:
     - dataset_seed
     - lr
@@ -15,21 +17,3 @@ stages:
     metrics:
     - scores.json:
         cache: false
-
-  train_periodogram:
-    cmd: python train_periodogram.py
-    deps:
-    - PLV_LINEAR.dat
-    - allDAT
-    - train_classifier.py
-    params:
-    - dataset_seed
-    - lr
-    - n_grid
-    - nepochs
-    outs:
-    - model_periodogram.pt
-    live:
-      training_metrics:
-        summary: true
-        html: true
