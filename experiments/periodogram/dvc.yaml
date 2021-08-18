@@ -1,12 +1,11 @@
 stages:
   train_periodogram:
-    cmd: python ../train_periodogram.py
+    cmd: python ../../src/train_periodogram.py
     deps:
-    - ../PLV_LINEAR.dat
-    - ../allDAT
-    - ../train_periodogram.py
-    - ../transforms_dataloader.py
-    - ../transforms_datasets.py
+    - ../../datasets/LINEAR
+    - ../../src/train_periodogram.py
+    - ../../src/transforms_dataloader.py
+    - ../../src/transforms_datasets.py
     params:
     - dataset_seed
     - interpolator
