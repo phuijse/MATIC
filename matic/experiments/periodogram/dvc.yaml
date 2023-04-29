@@ -14,7 +14,3 @@ stages:
     - nepochs
     outs:
     - model.pt
-    live:
-      training_metrics:
-        summary: true
-        html: true
