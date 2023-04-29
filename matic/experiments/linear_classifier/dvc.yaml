@@ -1,9 +1,9 @@
 stages:
   train:
-    cmd: python ../../src/train_classifier.py ../../datasets/LINEAR model.pt scores.json
+    cmd: python train.py ../../../data/LINEAR model.pt scores.json
     deps:
-    - ../../datasets/LINEAR
-    - ../../src/train_classifier.py
+    - ../../../data/LINEAR
+    - train.py
     - ../../src/transforms_datasets.py
     - ../../src/datasets.py
     - ../../src/transforms_dataloaders.py

@@ -7,7 +7,7 @@ import torch
 from torch.utils.data import DataLoader, random_split
 
 from datasets import LINEAR
-from transforms_datasets import Compose, Normalize, ToTensor
+from ..transforms.datasets import Compose, Normalize, ToTensor
 from transforms_dataloader import Collate_and_transform, PeriodFold, KernelInterpolation
 from models import SimpleConv
 

@@ -21,13 +21,13 @@ stages:
         dataset_seed: 1234
         interpolator: kernel
         lr: 0.001
-        n_grid: 30
+        n_grid: 100
         nepochs: 100
     outs:
     - path: model.pt
-      md5: 073dbbd174e19e4f95d4a5e1c851a95c
+      md5: ffaa4095c417b47625554e84f63ad6c9
       size: 21071
     - path: training_metrics
-      md5: c0e245c98c3a480b6d15de355e134e07.dir
-      size: 7594
+      md5: 55a625cfa3ce81132ca01864c0fe552a.dir
+      size: 7544
       nfiles: 2

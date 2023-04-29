@@ -68,7 +68,7 @@ class LINEAR(Dataset):
 
 if __name__ == "__main__":
 
-    dataset = LINEAR(path='.')
+    dataset = LINEAR(path='../../datasets/LINEAR')
     dataset.plot_lightcurve(0)
     fig, ax = plt.subplots(figsize=(6, 2), sharey=True, tight_layout=True)
     mjd, mag, err = dataset[0]['light_curve']

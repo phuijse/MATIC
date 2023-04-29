@@ -1,5 +1,5 @@
 interpolator: kernel
 dataset_seed: 1234
 lr: 0.001
-n_grid: 30
+n_grid: 100
 nepochs: 100
