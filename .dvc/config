@@ -1,0 +1,4 @@
+[core]
+    remote = guanaco
+['remote "guanaco"']
+    url = ssh://guanaco.inf.uach.cl:22334/home/shared/astro/dvc
